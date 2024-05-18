@@ -1,0 +1,114 @@
+extends base
+
+block content
+  h1 Question Paper
+
+  // Two-column layout
+  .row
+    .column-left
+      // Display subject name, subject code, and exam date
+      p.subject-info Subject Name: 
+        span #{data.subjectName}
+      p.subject-info Subject Code: 
+        span #{data.subjectCode}
+      p.subject-info Exam Date: 
+        span #{data.examDate}
+
+      // Display question paper content
+      each index in Array.from({ length: parseInt(data.numQuestions) }, (_, i) => i + 1)
+        p.question-info Question #{index}:
+          span #{data['question' + index]}
+
+    .column-right
+      // Grading form
+      form(action="/submit", method="POST", id="gradingForm")
+        each index in Array.from({ length: parseInt(data.numQuestions) }, (_, i) => i + 1)
+          .form-group
+            label(for=`grade${index}`) Grade for Question #{index}:
+            input(type="number", id=`grade${index}`, name=`grade${index}`, min="0", max="100", required oninput="calculateOverallGrade()")
+
+        .form-group
+          label(for="overall") Overall Grade:
+          input(type="number", id="overall", name="overallGrade", min="0", max="100", required readonly)
+        
+        button(type="submit", class="submit-btn") Submit
+
+  // JavaScript to calculate overall grade
+  script.
+    function calculateOverallGrade() {
+      const numQuestions = parseInt("#{data.numQuestions}");
+      let totalGrade = 0;
+      for (let i = 1; i <= numQuestions; i++) {
+        const gradeInput = document.getElementById(`grade${i}`);
+        if (gradeInput && gradeInput.value) {
+          totalGrade += parseFloat(gradeInput.value);
+        }
+      }
+      document.getElementById('overall').value = totalGrade;
+    }
+
+  // CSS styles
+  style.
+    .row {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+      font-size:16px;
+    }
+    .column-left, .column-right {
+      flex: 1;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .column-left {
+      background-color: #eef2f7;
+    }
+    .subject-info {
+      font-weight: bold;
+      font-size: 1.2em;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .question-info {
+      font-weight: bold;
+      font-size: 1.1em;
+      color: #444;
+      margin-bottom: 15px;
+    }
+    span {
+      font-weight: normal;
+      color: #555;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 1em;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }

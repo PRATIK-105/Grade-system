@@ -1,0 +1,75 @@
+extends base
+
+block content
+  h1 Question Paper
+    form.qp
+      .dynamic
+        label(for="subName") Subject Name:
+        input(type="text", id="subName", name="subjectName")
+        label(for="subCode") Subject Code:
+        input(type="text", id="subCode", name="subjectCode")
+        label(for="examDate") Exam Date:
+        input(type="date", id="examDate", name="examDate")
+
+        label(for="numQuestions") Number of Questions:
+        input(type="number", id="numQuestions", name="numQuestions", min="1", required)
+
+        button(type="button", id="addQuestion", style="margin-left: 50px;") Add Question
+      button(type="submit") Submit
+
+  script.
+      document.addEventListener('DOMContentLoaded', function() {
+        const addButton = document.getElementById('addQuestion');
+        const form = document.querySelector('.dynamic');
+
+        addButton.addEventListener('click', function() {
+          const numQuestions = parseInt(document.getElementById('numQuestions').value);
+          if (!isNaN(numQuestions)) {
+            for (let i = 1; i <= numQuestions; i++) {
+              const label = document.createElement('label');
+              label.textContent = 'Question ' + i + ':';
+              const input = document.createElement('input');
+              input.type = 'text';
+              input.name = 'question' + i;
+              form.appendChild(label);
+              form.appendChild(input);
+              form.appendChild(document.createElement('br')); // Add line break for better separation
+            }
+          }
+        });
+      });
+  style.
+    /* Add your CSS styles here */
+    body {
+      font-family: Arial, sans-serif;
+    }
+    form {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input[type="text"], input[type="date"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
